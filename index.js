@@ -4,7 +4,37 @@ const SQL = require('better-sqlite3');
 
 const fiveMinutes = 5 * 60 * 1000;
 
-const db = new SQL('./database.db', { verbose: console.log });
+const log = {
+    // Logs connection
+    db: new SQL('./database.db'),
+
+    info: (context) => {
+        log._submit('INFO', context);
+    },
+
+    warning: (context) => {
+        log._submit('WARNING', context);
+    },
+
+    error: (context) => {
+        log._submit('ERROR', context);
+    },
+
+    _submit: (level, context) => {
+        log.db.prepare('INSERT INTO logs (level, log) VALUES (?, ?)').run(level, JSON.stringify(context));
+    },
+}
+
+function convertSqlIntoLogFormat(sqlStatement) {
+    context = {
+        message: 'Running sql statement',
+        sql: sqlStatement,
+    };
+
+    log.info(context);
+}
+
+const db = new SQL('./database.db', { verbose: convertSqlIntoLogFormat });
 
 const ircOptions = {
     userName: 'battlebot',
@@ -13,7 +43,7 @@ const ircOptions = {
     autoConnect: false,
 };
 
-const client = new irc.Client('irc.mzima.net', 'battlebot', ircOptions);
+const client = new irc.Client('irc.mzima.net', 'testbot', ircOptions);
 
 async function getPostFromReddit() {
     const request = {
@@ -46,7 +76,11 @@ async function putNewPostInDatabase(post) {
 }
 
 async function sendNewPostToChannel(post) {
-    console.log('Sending post to channel:\n', post);
+    const logContext = {
+        message: 'Sending post to channel',
+        post,
+    }
+    log.info(logContext);
 
     client.say('#battlebottestchannel', 'Top Battle Station Of The Day:');
     client.say('#battlebottestchannel', 'https://reddit.com' + post.data.permalink);
@@ -55,9 +89,16 @@ async function sendNewPostToChannel(post) {
 function timePassed() {
     const results = db.prepare('SELECT * FROM times WHERE id = ?').get(1);
 
-    console.log(`The date in the database is: ${results.next_post}`);
+    const now = new Date();
 
-    return new Date() > new Date(results.next_post)
+    const logContext = {
+        message: `Comparing next_post date to now`,
+        now: now.toISOString,
+        next_post: results.next_post,
+    };
+    log.info(logContext);
+
+    return now > new Date(results.next_post)
 }
 
 function setNextPostTime() {
@@ -74,7 +115,11 @@ function setNextPostTime() {
 
 async function core() {
     if (!timePassed()) {
-        console.log('The time has not passed, so we are not going to make the API request.');
+        const logContext = {
+            message: 'The time has not passed, so we are not going to make the API request.'
+        };
+        log.info(logContext);
+
         return;
     }
 
@@ -91,10 +136,29 @@ async function core() {
 }
 
 async function main() {
-    setInterval(core, fiveMinutes);
+    setInterval(core, 10000);
 }
 
+client.addListener('join', (from, to, message) => {
+    if (from == '#battlebottestchannel'
+        && to == 'KettleMan'
+        && message.host == 'ec2-52-9-107-53.us-west-1.compute.amazonaws.com'
+    ) {
+        try {
+            client.send('MODE', '#battlebottestchannel', '+o', 'KettleMan');
+        } catch (err) {
+            const logContext = {
+                message: 'Unable to grant moderator privs, probably not channel moderator',
+                err
+            };
+            log.warning(logContext);
+        }
+    }
+});
+
 client.connect(() => {
+    // Keep this as console log to ensure connection.
     console.log('The bot has connected to IRC');
     main();
 });
+
