@@ -43,7 +43,7 @@ const ircOptions = {
     autoConnect: false,
 };
 
-const client = new irc.Client('irc.mzima.net', 'testbot', ircOptions);
+const client = new irc.Client('irc.mzima.net', 'battlebot', ircOptions);
 
 async function getPostFromReddit() {
     const request = {
