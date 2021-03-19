@@ -37,3 +37,10 @@ if (!results) {
 } else {
     console.log('A row of ID 1 already exists, no need for anymore rows.');
 }
+
+try {
+    const createLogs = "CREATE TABLE logs (id INTEGER PRIMARY KEY AUTOINCREMENT, level TEXT NOT NULL DEFAULT 'INFO', log TEXT NOT NULL, created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP);";
+    db.exec(createLogs);
+} catch (err) {
+    console.log('The table, logs, already exists.');
+}
