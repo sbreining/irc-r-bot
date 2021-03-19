@@ -136,7 +136,7 @@ async function core() {
 }
 
 async function main() {
-    setInterval(core, 10000);
+    setInterval(core, fiveMinutes);
 }
 
 client.addListener('join', (from, to, message) => {
