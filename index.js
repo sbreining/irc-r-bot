@@ -40,7 +40,8 @@ const ircOptions = {
     userName: 'battlebot',
     realName: 'Battle Bot for r/BattleStations',
     channels: ['#battlebottestchannel'],
-    autoConnect: false,
+    autoConnect: true,
+    retryCount: 3,
 };
 
 const client = new irc.Client('irc.mzima.net', 'battlebot', ircOptions);
@@ -139,8 +140,8 @@ async function main() {
     setInterval(core, fiveMinutes);
 }
 
-client.addListener('join', (from, to, message) => {
-    if (from == '#battlebottestchannel'
+client.addListener('join', (channel, to, message) => {
+    if (channel == '#battlebottestchannel'
         && to == 'KettleMan'
         && message.host == 'ec2-52-9-107-53.us-west-1.compute.amazonaws.com'
     ) {
@@ -156,9 +157,8 @@ client.addListener('join', (from, to, message) => {
     }
 });
 
-client.connect(() => {
+client.addListener('registered', () => {
     // Keep this as console log to ensure connection.
     console.log('The bot has connected to IRC');
     main();
 });
-
