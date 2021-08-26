@@ -4,7 +4,7 @@ An IRC bot that will reprot on the top Reddit r/battlestations post of the day.
 
 ### Issuing Commands
 
-Start command swith `!rbs [COMMAND]`.
+Start commands with `!rbs [COMMAND]`.
 
 #### Available Commands
 
