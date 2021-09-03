@@ -3,15 +3,10 @@ const SQL = require('better-sqlite3');
 const db = new SQL('./data/database.db');
 
 async function submit(level, message, context) {
-  if (!context) {
-    db.prepare('INSERT INTO logs (level, message) VALUES (?, ?)').run(level, message);
-    return;
-  }
-
   db.prepare('INSERT INTO logs (level, message, context) VALUES (?, ?, ?)').run(
     level,
     message,
-    JSON.stringify(context)
+    context ? JSON.stringify(context) : null
   );
 }
 

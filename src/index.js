@@ -1,115 +1,118 @@
-const irc = require('irc');
-const commands = require('./commands');
-const { api, db, log } = require('./utility');
+const IRC = require('irc');
+const Commands = require('./commands');
+const { API, DB, Log } = require('./utility');
 
 const FIVE_MINUTES = 5 * 60 * 1000;
 
-const CHANNEL = '#battlebottestchannel';
+const BOT_NAME = 'bbqbot';
+const IRC_NET = 'irc.libera.chat';
+const CHANNEL = '#bbqbottestchannel';
+const BOT_OWNER = 'KettleMan';
+const BOT_HOST = '';
 
-const client = new irc.Client('irc.mzima.net', 'battlebot2', {
-  userName: 'battlebot2',
-  realName: 'Battle Bot for r/BattleStations',
+const IRC_OPTS = {
+  userName: BOT_NAME,
+  realName: 'BBQ Bot for r/BBQ: Low and Slow',
   channels: [CHANNEL],
   autoConnect: true,
   retryCount: 3,
-});
+};
+
+const Client = new IRC.Client(IRC_NET, BOT_NAME, IRC_OPTS);
 
 function getPostFullName(post) {
   return post.kind + '_' + post.data.id;
 }
 
 async function sendNewPostToChannel(post) {
-  log.info('Sending post to channel', { post });
+  Log.info('Sending post to channel', { post });
 
-  client.say(CHANNEL, 'Top Battle Station Of The Day:');
-  client.say(CHANNEL, api.BASE_URL + post.data.permalink);
+  Client.say(CHANNEL, 'Top BBQ Post Of The Day:');
+  Client.say(CHANNEL, API.BASE_URL + post.data.permalink);
 }
 
 function timePassed() {
-  const results = db.getTimestamp();
+  const results = DB.getTimestamp();
 
   const now = new Date();
 
-  log.info('Comparing next_post date to now', { now: now.toISOString(), next_post: results.next_post });
+  Log.info('Comparing next_post date to now', { now: now.toISOString(), next_post: results.next_post });
 
   return now > new Date(results.next_post);
 }
 
 async function core() {
   if (!timePassed()) {
-    log.info('Time has not passed, so do not make the API request.');
+    Log.info('Time has not passed, so do not make the API request.');
     return;
   }
 
-  let topFivePosts = await api.getTopPostsFromReddit();
+  let topFivePosts = await API.getTopPosts(5);
 
   for (const post of topFivePosts) {
     const postFullName = getPostFullName(post);
-    if (!db.isInDatabase(postFullName)) {
-      db.putNewPostInDatabase(postFullName);
+    if (!DB.isInDatabase(postFullName)) {
+      DB.putNewPostInDatabase(postFullName);
       sendNewPostToChannel(post);
-      db.setNextPostTime();
+      DB.setNextPostTime();
 
       return;
     }
   }
 
-  log.info('The top 5 posts have all been sent before.');
+  Log.info('The top 5 posts have all been sent before.');
 }
 
 function joinListener(channel, to, message) {
-  if (channel === CHANNEL && to === 'KettleMan' /* && message.host === 'HOSTNAME' */) {
+  if (channel === CHANNEL && to === BOT_OWNER /* && message.host === BOT_HOST */) {
     try {
-      client.send('MODE', CHANNEL, '+o', 'KettleMan');
+      Client.send('MODE', CHANNEL, '+o', BOT_OWNER);
     } catch (err) {
-      log.warning('Unable to grant moderator privs, bot is probably not channel moderator', { err });
+      Log.warning('Unable to grant moderator privs, bot is probably not channel moderator', { err });
     }
   }
 }
 
 async function commandHandler(_, message) {
-  if (!message.startsWith('!rbs')) return;
+  if (!message.startsWith(Commands.COMMAND_PREFIX)) return;
 
-  log.info('Received a command.', { command: message });
+  Log.info('Received a command.', { command: message });
 
   const command = message.split(' ');
 
   switch (command[1]) {
     case 'link':
-      client.say(CHANNEL, commands.handleLink());
+      Client.say(CHANNEL, Commands.handleLink());
       break;
     case 'new':
-      commands
-        .handleNewest(command[2])
+      Commands.handleNewest(command[2])
         .then((posts) => {
           for (const post of posts) {
-            client.say(CHANNEL, post);
+            Client.say(CHANNEL, post);
           }
         })
-        .catch((err) => client.say(CHANNEL, err.message));
+        .catch((err) => Client.say(CHANNEL, err.message));
       break;
     case 'top':
-      commands
-        .handleTop(command[2])
+      Commands.handleTop(command[2])
         .then((posts) => {
           for (const post of posts) {
-            client.say(CHANNEL, post);
+            Client.say(CHANNEL, post);
           }
         })
-        .catch((err) => client.say(CHANNEL, err.message));
+        .catch((err) => Client.say(CHANNEL, err.message));
       break;
     default:
-      client.say(CHANNEL, 'Not a valid command.');
+      Client.say(CHANNEL, 'Not a valid command.');
   }
 }
 
 async function main() {
-  // Keep this as console log to ensure connection.
+  // Keep this as console Log to ensure connection.
   console.log('The bot has connected to IRC');
   setInterval(core, FIVE_MINUTES);
 }
 
-client
-  .addListener(`message${CHANNEL}`, commandHandler)
+Client.addListener(`message${CHANNEL}`, commandHandler)
   .addListener('join', joinListener)
   .addListener('registered', main);

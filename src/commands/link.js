@@ -1,6 +1,6 @@
-const { api } = require('../utility');
+const { API } = require('../utility');
 function handleLink() {
-  return api.BATTLE_URL;
+  return API.BATTLE_URL;
 }
 
 module.exports = handleLink;

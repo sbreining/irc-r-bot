@@ -1,7 +1,7 @@
 const phin = require('phin');
 
 const BASE_URL = 'https://www.reddit.com';
-const BATTLE_URL = `${BASE_URL}/r/battlestations`;
+const BATTLE_URL = `${BASE_URL}/r/BBQ`;
 
 async function getPostsFromReddit(path, limit) {
   const request = {
@@ -15,6 +15,9 @@ async function getPostsFromReddit(path, limit) {
   return response.body.data.children;
 }
 
-const api = (module.exports = getPostsFromReddit);
-api.BASE_URL = BASE_URL;
-api.BATTLE_URL = BATTLE_URL;
+module.exports = {
+  BASE_URL,
+  BATTLE_URL,
+  getTopPosts: (num) => getPostsFromReddit('top', num),
+  getNewPosts: (num) => getPostsFromReddit('new', num),
+};

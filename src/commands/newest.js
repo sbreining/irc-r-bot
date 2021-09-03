@@ -1,21 +1,21 @@
-const { api, log, validateNumberParam } = require('../utility');
+const { API, Log, validateNumberParam } = require('../utility');
 
 async function handleNewest(num) {
   num = validateNumberParam(num);
 
-  log.info('Going to fetch posts on behalf of "new" command.', { count: num });
+  Log.info('Going to fetch posts on behalf of "new" command.', { count: num });
 
   let apiResponse;
   try {
-    apiResponse = await api('new', num);
+    apiResponse = await API.getNewPosts(num);
   } catch (error) {
-    log.error('Failed to retrieve newest posts from reddit.', { error });
+    Log.error('Failed to retrieve newest posts from reddit.', { error });
     return [];
   }
 
   const posts = [];
   for (const index in apiResponse) {
-    posts.push(`${Number(index) + 1}. ${api.BASE_URL}${apiResponse[index].data.permalink}`);
+    posts.push(`${Number(index) + 1}. ${API.BASE_URL}${apiResponse[index].data.permalink}`);
   }
 
   return posts;

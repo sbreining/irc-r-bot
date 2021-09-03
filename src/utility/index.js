@@ -1,6 +1,6 @@
-const api = require('./api');
-const db = require('./db');
-const log = require('./log');
+const API = require('./api');
+const DB = require('./db');
+const Log = require('./log');
 
 function validateNumberParam(num) {
   if (num === undefined) num = 1;
@@ -15,23 +15,29 @@ function validateNumberParam(num) {
     case 'three':
       num = 3;
       break;
+    case 'four':
+      num = 4;
+      break;
+    case 'five':
+      num = 5;
+      break;
     default:
       num = Number(num);
   }
 
   if (!num || num < 1) {
-    throw new Error('Please use a valid integer 1, 2, or 3.');
+    throw new Error('Please use a valid integer 1 - 5.');
   }
-  if (num > 3) {
-    throw new Error('To reduce spam, will only post at most 3. Want more? "!rbs link"');
+  if (num > 5) {
+    throw new Error(`To reduce spam, will only post at most 5. Want more? "!bb link"`);
   }
 
   return Math.floor(num);
 }
 
 module.exports = {
-  api,
-  db,
-  log,
+  API,
+  DB,
+  Log,
   validateNumberParam,
 };
