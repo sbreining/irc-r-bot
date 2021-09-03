@@ -81,6 +81,15 @@ async function commandHandler(_, message) {
   const command = message.split(' ');
 
   switch (command[1]) {
+    case 'hot':
+      Commands.handleHottest(command[2])
+        .then((posts) => {
+          for (const post of posts) {
+            Client.say(CHANNEL, post);
+          }
+        })
+        .catch((err) => Client.say(CHANNEL, err.message));
+      break;
     case 'link':
       Client.say(CHANNEL, Commands.handleLink());
       break;

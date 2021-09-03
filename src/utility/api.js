@@ -18,6 +18,7 @@ async function getPostsFromReddit(path, limit) {
 module.exports = {
   BASE_URL,
   BATTLE_URL,
-  getTopPosts: (num) => getPostsFromReddit('top', num),
+  getHotPosts: (num) => getPostsFromReddit('hot', num),
   getNewPosts: (num) => getPostsFromReddit('new', num),
+  getTopPosts: (num) => getPostsFromReddit('top', num),
 };
