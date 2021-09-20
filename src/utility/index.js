@@ -3,7 +3,7 @@ const DB = require('./db');
 const Log = require('./log');
 
 function validateNumberParam(num) {
-  if (num === undefined) num = 1;
+  if (num === undefined) return 3;
 
   switch (num) {
     case 'one':

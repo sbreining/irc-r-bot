@@ -15,7 +15,7 @@ async function handleNewest(num) {
 
   const posts = [];
   for (const index in apiResponse) {
-    posts.push(`${Number(index) + 1}. ${API.BASE_URL}${apiResponse[index].data.permalink}`);
+    posts.push(`${Number(index) + 1}. ${API.SHORT_URL}${apiResponse[index].data.id}`);
   }
 
   return posts;

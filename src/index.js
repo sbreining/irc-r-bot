@@ -7,8 +7,6 @@ const FIVE_MINUTES = 5 * 60 * 1000;
 const BOT_NAME = 'bbqbot';
 const IRC_NET = 'irc.libera.chat';
 const CHANNEL = '#bbqbottestchannel';
-const BOT_OWNER = 'KettleMan';
-const BOT_HOST = '';
 
 const IRC_OPTS = {
   userName: BOT_NAME,
@@ -28,7 +26,7 @@ async function sendNewPostToChannel(post) {
   Log.info('Sending post to channel', { post });
 
   Client.say(CHANNEL, 'Top BBQ Post Of The Day:');
-  Client.say(CHANNEL, API.BASE_URL + post.data.permalink);
+  Client.say(CHANNEL, API.SHORT_URL + post.data.id);
 }
 
 function timePassed() {
@@ -63,15 +61,18 @@ async function core() {
   Log.info('The top 5 posts have all been sent before.');
 }
 
-function joinListener(channel, to, message) {
-  if (channel === CHANNEL && to === BOT_OWNER /* && message.host === BOT_HOST */) {
-    try {
-      Client.send('MODE', CHANNEL, '+o', BOT_OWNER);
-    } catch (err) {
-      Log.warning('Unable to grant moderator privs, bot is probably not channel moderator', { err });
-    }
-  }
-}
+// The following is to grant moderator priveledges (provided the bot can) to BOT_OWNER
+// with BOT_HOST. The host is in there to prevent impersonators if using only the nick
+// alone to auto-mod.
+// function joinListener(channel, to, message) {
+//   if (channel === CHANNEL && to === BOT_OWNER && message.host === BOT_HOST) {
+//     try {
+//       Client.send('MODE', CHANNEL, '+o', BOT_OWNER);
+//     } catch (err) {
+//       Log.warning('Unable to grant moderator privs, bot is probably not channel moderator', { err });
+//     }
+//   }
+// }
 
 async function commandHandler(_, message) {
   if (!message.startsWith(Commands.COMMAND_PREFIX)) return;

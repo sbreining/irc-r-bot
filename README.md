@@ -1,13 +1,29 @@
 # r-battle-station-bot
 
-An IRC bot that will reprot on the top Reddit r/battlestations post of the day.
+An IRC bot that will report on the top Reddit r/bbq post of the day.
+Additionaly it has a listener for commands to see the hot|new|top x
+posts. The links posted are shortened links, and thus are redirects
+to the actual link.
 
 ### Issuing Commands
 
-Start commands with `!rbs [COMMAND]`.
+Start commands with `!bb [COMMAND]`.
 
 #### Available Commands
 
-- `top [NUMBER]`: `NUMBER` is optional or `1 <= NUMBER <= 3` and is an integer (will take `Math.floor()` if not an integer), or is `one|two|three`, and if ommitted will post the top Reddit post of the day.
-- `new [NUMBER]`: `NUMBER` is optional or `1 <= NUMBER <= 3` and is an integer (will take `Math.floor()` if not an integer), or is `one|two|three`, and if ommitted will post the newest Reddit post of the day.
-- `link`: With no additional params needed, this will report the link to the battle station subreddit.
+- `hot [NUMBER]`
+  - `NUMBER` is optional or `1 <= NUMBER <= 5` and is an integer (will take
+    `Math.floor()` if not an integer), or is `one|two|three|four|five`, and if
+    ommitted will post the three 'hottest' Reddit posts of the day (for
+    whatever Reddit deems 'hot').
+- `link`
+  - With no additional params needed, this will report the link to the
+    barbeque subreddit.
+- `new [NUMBER]`
+  - `NUMBER` is optional or `1 <= NUMBER <= 5` and is an integer (will take
+    `Math.floor()` if not an integer), or is `one|two|three|four|five`, and if
+    ommitted will post the three newest Reddit posts of the day.
+- `top [NUMBER]`
+  - `NUMBER` is optional or `1 <= NUMBER <= 5` and is an integer (will take
+    `Math.floor()` if not an integer), or is `one|two|three|four|five`, and if
+    ommitted will post the three top Reddit posts of the day.
