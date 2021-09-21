@@ -1,15 +1,24 @@
-# r-battle-station-bot
+```
+                                   _                         _           _
+                                  (_)_ __ ___      _ __     | |__   ___ | |_
+                                  | | '__/ __|____| '__|____| '_ \ / _ \| __|
+                                  | | | | (_|_____| | |_____| |_) | (_) | |_
+                                  |_|_|  \___|    |_|       |_.__/ \___/ \__|
+
+```
+
+## Description
 
 An IRC bot that will report on the top Reddit r/bbq post of the day.
 Additionaly it has a listener for commands to see the hot|new|top x
 posts. The links posted are shortened links, and thus are redirects
 to the actual link.
 
-### Issuing Commands
+## Issuing Commands
 
 Start commands with `!bb COMMAND [OPTIONS]`.
 
-#### Available Commands
+## Available Commands
 
 - `hot [NUMBER]`
   - `NUMBER` is optional, or is `1 <= NUMBER <= 5` and an integer (will take
