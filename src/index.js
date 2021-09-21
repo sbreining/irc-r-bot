@@ -25,8 +25,7 @@ function getPostFullName(post) {
 async function sendNewPostToChannel(post) {
   Log.info('Sending post to channel', { post });
 
-  Client.say(CHANNEL, 'Top BBQ Post Of The Day:');
-  Client.say(CHANNEL, API.SHORT_URL + post.data.id);
+  Client.say(CHANNEL, `Top BBQ Post Of The Day: ${API.SHORT_URL + post.data.id}`);
 }
 
 function timePassed() {
@@ -104,7 +103,7 @@ async function commandHandler(_, message) {
         .catch((err) => Client.say(CHANNEL, err.message));
       break;
     case 'top':
-      Commands.handleTop(command[2])
+      Commands.handleTop(command[2], command[3])
         .then((posts) => {
           for (const post of posts) {
             Client.say(CHANNEL, post);
@@ -123,6 +122,5 @@ async function main() {
   setInterval(core, FIVE_MINUTES);
 }
 
-Client.addListener(`message${CHANNEL}`, commandHandler)
-  .addListener('join', joinListener)
-  .addListener('registered', main);
+Client.addListener(`message${CHANNEL}`, commandHandler).addListener('registered', main);
+// .addListener('join', joinListener);

@@ -7,12 +7,12 @@ to the actual link.
 
 ### Issuing Commands
 
-Start commands with `!bb [COMMAND]`.
+Start commands with `!bb COMMAND [OPTIONS]`.
 
 #### Available Commands
 
 - `hot [NUMBER]`
-  - `NUMBER` is optional or `1 <= NUMBER <= 5` and is an integer (will take
+  - `NUMBER` is optional, or is `1 <= NUMBER <= 5` and an integer (will take
     `Math.floor()` if not an integer), or is `one|two|three|four|five`, and if
     ommitted will post the three 'hottest' Reddit posts of the day (for
     whatever Reddit deems 'hot').
@@ -20,10 +20,21 @@ Start commands with `!bb [COMMAND]`.
   - With no additional params needed, this will report the link to the
     barbeque subreddit.
 - `new [NUMBER]`
-  - `NUMBER` is optional or `1 <= NUMBER <= 5` and is an integer (will take
+  - `NUMBER` is optional, or is `1 <= NUMBER <= 5` and an integer (will take
     `Math.floor()` if not an integer), or is `one|two|three|four|five`, and if
     ommitted will post the three newest Reddit posts of the day.
-- `top [NUMBER]`
-  - `NUMBER` is optional or `1 <= NUMBER <= 5` and is an integer (will take
+- `top [NUMBER] [TIMEFRAME]`
+  - `NUMBER` is optional, or is `1 <= NUMBER <= 5` and an integer (will take
     `Math.floor()` if not an integer), or is `one|two|three|four|five`, and if
     ommitted will post the three top Reddit posts of the day.
+  - `TIMEFRAME` is optional, and if omitted will default to `day`, or from the
+    following list (case-insensitive):
+    ```
+    [
+      d, day, daily,
+      w, week, weekly,
+      m, mon, month, monthly,
+      y, year, yearly,
+      a, at, all, alltime
+    ]
+    ```

@@ -11,9 +11,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "better-sqlite3": "^7.1.2",
+    "better-sqlite3": "^7.4.3",
     "irc": "^0.5.2",
-    "phin": "^3.5.1"
+    "phin": "^3.6.0"
   },
   "prettier": {
     "printWidth": 120,
