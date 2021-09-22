@@ -6,7 +6,7 @@ const FIVE_MINUTES = 5 * 60 * 1000;
 
 const BOT_NAME = 'bbqbot';
 const IRC_NET = 'irc.libera.chat';
-const CHANNEL = '#bbqbottestchannel';
+const CHANNEL = '##bbq';
 
 const IRC_OPTS = {
   userName: BOT_NAME,
@@ -83,11 +83,7 @@ async function commandHandler(_, message) {
   switch (command[1]) {
     case 'hot':
       Commands.handleHottest(command[2])
-        .then((posts) => {
-          for (const post of posts) {
-            Client.say(CHANNEL, post);
-          }
-        })
+        .then((message) => Client.say(CHANNEL, message))
         .catch((err) => Client.say(CHANNEL, err.message));
       break;
     case 'link':
@@ -95,24 +91,16 @@ async function commandHandler(_, message) {
       break;
     case 'new':
       Commands.handleNewest(command[2])
-        .then((posts) => {
-          for (const post of posts) {
-            Client.say(CHANNEL, post);
-          }
-        })
+        .then((message) => Client.say(CHANNEL, message))
         .catch((err) => Client.say(CHANNEL, err.message));
       break;
     case 'top':
       Commands.handleTop(command[2], command[3])
-        .then((posts) => {
-          for (const post of posts) {
-            Client.say(CHANNEL, post);
-          }
-        })
+        .then((message) => Client.say(CHANNEL, message))
         .catch((err) => Client.say(CHANNEL, err.message));
       break;
     default:
-      Client.say(CHANNEL, 'Not a valid command.');
+      Client.say(CHANNEL, 'How to use: !bb [COMMAND]. Available commands: hot, link, new, top');
   }
 }
 

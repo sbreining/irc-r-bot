@@ -23,8 +23,8 @@ async function setNextPostTime() {
   const now = new Date();
 
   now.setDate(now.getDate() + 1);
-  now.setHours(9);
-  now.setMinutes(0);
+  now.setHours(12);
+  now.setMinutes(30);
   now.setSeconds(0);
   now.setMilliseconds(0);
 

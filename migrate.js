@@ -65,8 +65,8 @@ const results = db.prepare(query).get(1);
 
 if (!results) {
   const now = new Date();
-  now.setHours(9);
-  now.setMinutes(0);
+  now.setHours(12);
+  now.setMinutes(30);
   now.setSeconds(0);
   now.setMilliseconds(0);
 

@@ -9,16 +9,17 @@ async function handleHottest(num) {
   try {
     apiResponse = await API.getHotPosts(num);
   } catch (error) {
-    Log.error('Failed to retrieve hottest posts from reddit.', { error });
-    return [];
+    const errorMessage = 'Failed to retrieve hottest posts from reddit.';
+    Log.error(errorMessage, { error });
+    return Promise.reject(errorMessage);
   }
 
   const posts = [];
   for (const index in apiResponse) {
-    posts.push(`${Number(index) + 1}. ${API.SHORT_URL}${apiResponse[index].data.id}`);
+    posts.push(`[ ${Number(index) + 1}. ${API.SHORT_URL}${apiResponse[index].data.id} ]`);
   }
 
-  return posts;
+  return posts.join('|.-^-.|');
 }
 
 module.exports = handleHottest;
