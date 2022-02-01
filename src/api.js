@@ -18,8 +18,8 @@ async function getPostsFromReddit(path, limit, timeframe = 'day') {
 
 module.exports = {
   BBQ_URL,
-  getHotPosts: (num) => getPostsFromReddit('hot', num),
-  getNewPosts: (num) => getPostsFromReddit('new', num),
-  getTopPosts: (num, timeframe) => getPostsFromReddit('top', num, timeframe),
+  hot_: (num) => getPostsFromReddit('hot', num),
+  new_: (num) => getPostsFromReddit('new', num),
+  top_: (num, timeframe) => getPostsFromReddit('top', num, timeframe),
   SHORT_URL,
 };

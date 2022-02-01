@@ -1,8 +1,8 @@
 const SQL = require('better-sqlite3');
-const log = require('./log');
+const Log = require('./log');
 
 const db = new SQL('./data/database.db', {
-  verbose: (sqlStatement) => log.info('Running sql statement', { sql: sqlStatement }),
+  verbose: (sqlStatement) => Log.info('Running sql statement', { sql: sqlStatement }),
 });
 
 function getTimestamp() {
